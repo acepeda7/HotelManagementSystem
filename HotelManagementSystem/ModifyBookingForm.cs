@@ -1,4 +1,8 @@
-﻿using System;
+﻿using HotelManagementSystem.Data;
+using HotelManagementSystem.Models;
+using HotelManagementSystem.Services;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,9 +11,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using HotelManagementSystem.Data;
-using HotelManagementSystem.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace HotelManagementSystem
 {
@@ -137,11 +138,11 @@ namespace HotelManagementSystem
 
             int nights = (newCheckOut - newCheckIn).Days;
 
-            newSubtotal = roomPricePerNight * nights;
+            newSubtotal = BookingCalculator.CalculateSubtotal(roomPricePerNight,nights);
 
-            newDiscountAmount = decimal.Round( newSubtotal * originalDiscountRate, 2);
+            newDiscountAmount = BookingCalculator.CalculateDiscount(newSubtotal,originalDiscountRate * 100m);
 
-            newTotal = newSubtotal - newDiscountAmount;
+            newTotal = BookingCalculator.CalculateTotal(newSubtotal,newDiscountAmount);
 
             lblNewNightsValue.Text = $"Nights: {nights}";
 
@@ -194,18 +195,8 @@ namespace HotelManagementSystem
                 return;
             }
 
-            bool conflict = db.Bookings.Any(
-            otherBooking =>
-                otherBooking.Id != booking.Id &&
-                otherBooking.RoomId == booking.RoomId &&
-                otherBooking.Status !=
-                    BookingStatus.Cancelled &&
-                otherBooking.Status !=
-                    BookingStatus.Rejected &&
-                newCheckIn <
-                    otherBooking.CheckOutDate &&
-                newCheckOut >
-                    otherBooking.CheckInDate);
+            bool conflict = db.Bookings.Any(BookingValidator.ConflictsWith(
+                booking.RoomId, newCheckIn, newCheckOut, booking.Id));
 
             if (conflict)
             {

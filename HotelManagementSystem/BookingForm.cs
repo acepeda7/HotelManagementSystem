@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using HotelManagementSystem.Data;
 using HotelManagementSystem.Models;
 using Microsoft.EntityFrameworkCore;
+using HotelManagementSystem.Services;
 
 namespace HotelManagementSystem
 {
@@ -58,12 +59,13 @@ namespace HotelManagementSystem
                 return;
             }
 
-            int numberOfNights = (checkOut - checkIn).Days;
+            int numberOfNights = BookingCalculator.CalculateNights(checkIn,checkOut);
 
-            subtotal = room.PricePerNight * numberOfNights;
+            subtotal = BookingCalculator.CalculateSubtotal(room.PricePerNight,numberOfNights);
 
-            discountAmount = 0;
-            totalAmount = subtotal;
+            discountAmount = 0m;
+
+            totalAmount = BookingCalculator.CalculateTotal(subtotal,discountAmount);
 
             lblHotelValue.Text = $"{room.Hotel.Name} ({room.Hotel.StarRating} stars)";
 
@@ -109,11 +111,9 @@ namespace HotelManagementSystem
 
             selectedDiscountId = discount.Id;
 
-            discountAmount = decimal.Round(
-                subtotal * discount.Percentage / 100m,
-                2);
+            discountAmount = BookingCalculator.CalculateDiscount(subtotal,discount.Percentage);
 
-            totalAmount = subtotal - discountAmount;
+            totalAmount = BookingCalculator.CalculateTotal(subtotal,discountAmount);
 
             UpdatePriceLabels();
 
@@ -147,7 +147,7 @@ namespace HotelManagementSystem
                 return;
             }
 
-            if (!IsValidCardNumber(cardNumber))
+            if (!CardValidator.IsValid(cardNumber))
             {
                 ShowError("Enter a valid card number.");
                 txtCardNumber.Focus();
@@ -187,12 +187,7 @@ namespace HotelManagementSystem
                 throw new InvalidOperationException("The selected room no longer exists.");
             }
 
-            bool bookingConflict = db.Bookings.Any(
-                booking => booking.RoomId == roomId &&
-                booking.Status != BookingStatus.Cancelled &&
-                booking.Status != BookingStatus.Rejected &&
-                checkIn < booking.CheckOutDate &&
-                checkOut > booking.CheckInDate);
+            bool bookingConflict = db.Bookings.Any(BookingValidator.ConflictsWith(roomId,checkIn,checkOut));
 
             if (room.Status != RoomStatus.Available || bookingConflict)
             {
@@ -211,9 +206,9 @@ namespace HotelManagementSystem
                     throw new InvalidOperationException("The selected discount is no longer valid.");
                 }
 
-                discountAmount = decimal.Round(subtotal * discount.Percentage / 100m,2);
+                discountAmount = BookingCalculator.CalculateDiscount(subtotal,discount.Percentage);
 
-                totalAmount = subtotal - discountAmount;
+                totalAmount = BookingCalculator.CalculateTotal(subtotal,discountAmount);
             }
 
             Booking booking = new Booking
@@ -259,40 +254,6 @@ namespace HotelManagementSystem
             db.SaveChanges();
 
             transaction.Commit();
-        }
-
-        private static bool IsValidCardNumber(string cardNumber)
-        {
-            if (cardNumber.Length < 13 ||
-                cardNumber.Length > 19)
-            {
-                return false;
-            }
-
-            int sum = 0;
-            bool doubleDigit = false;
-
-            for (int index = cardNumber.Length - 1;
-                 index >= 0;
-                 index--)
-            {
-                int digit = cardNumber[index] - '0';
-
-                if (doubleDigit)
-                {
-                    digit *= 2;
-
-                    if (digit > 9)
-                    {
-                        digit -= 9;
-                    }
-                }
-
-                sum += digit;
-                doubleDigit = !doubleDigit;
-            }
-
-            return sum % 10 == 0;
         }
 
         private void ShowError(string message)

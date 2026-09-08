@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using HotelManagementSystem.UI;
 
 namespace HotelManagementSystem
 {
@@ -28,6 +29,200 @@ namespace HotelManagementSystem
         public ModifyBookingForm()
         {
             InitializeComponent();
+            AppTheme.Apply(this);
+            ImproveModifyBookingLayout();
+        }
+
+        private void ImproveModifyBookingLayout()
+        {
+            SuspendLayout();
+
+            Text = "Modify Booking";
+            ClientSize = new Size(560, 610);
+            BackColor = AppTheme.Background;
+
+            const int labelLeft = 65;
+            const int valueLeft = 220;
+            const int valueWidth = 275;
+
+            // Título nuevo
+            Label lblPageTitle = new()
+            {
+                Name = "lblPageTitle",
+                Text = "Modify your booking",
+                AutoSize = true,
+                Font = new Font(
+                    "Segoe UI Semibold",
+                    20F,
+                    FontStyle.Regular),
+                ForeColor = AppTheme.Text,
+                BackColor = AppTheme.Background,
+                Top = 30
+            };
+
+            lblPageTitle.Left =
+                (ClientSize.Width - lblPageTitle.Width) / 2;
+
+            Controls.Add(lblPageTitle);
+
+            // Información actual
+            PositionModifyRow(
+                label1,
+                lblHotelValue,
+                "Hotel",
+                labelLeft,
+                valueLeft,
+                100,
+                valueWidth);
+
+            PositionModifyRow(
+                label2,
+                lblRoomValue,
+                "Room",
+                labelLeft,
+                valueLeft,
+                140,
+                valueWidth);
+
+            PositionModifyRow(
+                label3,
+                lblCurrentDatesValue,
+                "Current dates",
+                labelLeft,
+                valueLeft,
+                180,
+                valueWidth);
+
+            // Nueva fecha de entrada
+            label4.Text = "New check-in";
+            label4.Left = labelLeft;
+            label4.Top = 235;
+            label4.ForeColor = AppTheme.MutedText;
+
+            dtpNewCheckIn.Left = valueLeft;
+            dtpNewCheckIn.Top = 230;
+            dtpNewCheckIn.Width = valueWidth;
+            dtpNewCheckIn.Format = DateTimePickerFormat.Short;
+
+            // Nueva fecha de salida
+            label5.Text = "New check-out";
+            label5.Left = labelLeft;
+            label5.Top = 285;
+            label5.ForeColor = AppTheme.MutedText;
+
+            dtpNewCheckOut.Left = valueLeft;
+            dtpNewCheckOut.Top = 280;
+            dtpNewCheckOut.Width = valueWidth;
+            dtpNewCheckOut.Format = DateTimePickerFormat.Short;
+
+            // Nuevo cálculo
+            lblNewNightsValue.AutoSize = false;
+            lblNewNightsValue.Left = valueLeft;
+            lblNewNightsValue.Top = 335;
+            lblNewNightsValue.Width = valueWidth;
+            lblNewNightsValue.Height = 24;
+            lblNewNightsValue.ForeColor = AppTheme.Text;
+
+            lblNewSubtotalValue.AutoSize = false;
+            lblNewSubtotalValue.Left = valueLeft;
+            lblNewSubtotalValue.Top = 370;
+            lblNewSubtotalValue.Width = valueWidth;
+            lblNewSubtotalValue.Height = 24;
+            lblNewSubtotalValue.ForeColor = AppTheme.Text;
+
+            lblNewDiscountValue.AutoSize = false;
+            lblNewDiscountValue.Left = valueLeft;
+            lblNewDiscountValue.Top = 405;
+            lblNewDiscountValue.Width = valueWidth;
+            lblNewDiscountValue.Height = 24;
+            lblNewDiscountValue.ForeColor = AppTheme.MutedText;
+
+            lblNewTotalValue.AutoSize = false;
+            lblNewTotalValue.Left = valueLeft;
+            lblNewTotalValue.Top = 442;
+            lblNewTotalValue.Width = valueWidth;
+            lblNewTotalValue.Height = 30;
+            lblNewTotalValue.Font = new Font(
+                "Segoe UI Semibold",
+                13F,
+                FontStyle.Regular);
+
+            lblNewTotalValue.ForeColor = AppTheme.PrimaryDark;
+
+            // Mensaje de validación
+            lblMessage.AutoSize = false;
+            lblMessage.Left = labelLeft;
+            lblMessage.Top = 480;
+            lblMessage.Width = 430;
+            lblMessage.Height = 24;
+            lblMessage.ForeColor = Color.IndianRed;
+            lblMessage.TextAlign = ContentAlignment.MiddleLeft;
+
+            // Calcular nuevo precio
+            btnCalculate.Text = "Calculate price";
+            btnCalculate.Left = 30;
+            btnCalculate.Top = 525;
+            btnCalculate.Width = 155;
+            btnCalculate.Height = 40;
+            btnCalculate.BackColor = Color.White;
+            btnCalculate.ForeColor = AppTheme.Primary;
+            btnCalculate.FlatStyle = FlatStyle.Flat;
+            btnCalculate.FlatAppearance.BorderColor =
+                AppTheme.Primary;
+            btnCalculate.FlatAppearance.BorderSize = 1;
+
+            // Guardar cambios
+            btnSaveChanges.Text = "Save changes";
+            btnSaveChanges.Left = 202;
+            btnSaveChanges.Top = 525;
+            btnSaveChanges.Width = 155;
+            btnSaveChanges.Height = 40;
+            btnSaveChanges.BackColor = AppTheme.Primary;
+            btnSaveChanges.ForeColor = Color.White;
+            btnSaveChanges.FlatStyle = FlatStyle.Flat;
+            btnSaveChanges.FlatAppearance.BorderSize = 0;
+
+            // Cancelar
+            btnCancel.Text = "Cancel";
+            btnCancel.Left = 374;
+            btnCancel.Top = 525;
+            btnCancel.Width = 155;
+            btnCancel.Height = 40;
+            btnCancel.BackColor = Color.White;
+            btnCancel.ForeColor = AppTheme.Primary;
+            btnCancel.FlatStyle = FlatStyle.Flat;
+            btnCancel.FlatAppearance.BorderColor =
+                AppTheme.Primary;
+            btnCancel.FlatAppearance.BorderSize = 1;
+
+            AcceptButton = btnSaveChanges;
+            CancelButton = btnCancel;
+
+            ResumeLayout(false);
+            PerformLayout();
+        }
+
+        private static void PositionModifyRow(
+            Label description,
+            Label value,
+            string descriptionText,
+            int labelLeft,
+            int valueLeft,
+            int top,
+            int valueWidth)
+        {
+            description.Text = descriptionText;
+            description.Left = labelLeft;
+            description.Top = top;
+            description.ForeColor = AppTheme.MutedText;
+
+            value.AutoSize = false;
+            value.Left = valueLeft;
+            value.Top = top;
+            value.Width = valueWidth;
+            value.Height = 24;
+            value.AutoEllipsis = true;
+            value.ForeColor = AppTheme.Text;
         }
 
         public ModifyBookingForm(int guestId, int bookingId) : this()

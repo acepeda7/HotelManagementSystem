@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using HotelManagementSystem.Data;
 using HotelManagementSystem.Models;
 using Microsoft.EntityFrameworkCore;
+using HotelManagementSystem.UI;
 
 namespace HotelManagementSystem
 {
@@ -21,6 +22,830 @@ namespace HotelManagementSystem
         public DashboardForm()
         {
             InitializeComponent();
+            AppTheme.Apply(this);
+            ImproveDashboardLayout();
+
+
+        }
+
+        private void ImproveDashboardLayout()
+        {
+            // Títulos
+            StylePageTitle(label1, tabGuest);
+            StylePageTitle(label4, tabMyBookings);
+            StylePageTitle(label5, tabNotifications);
+
+            // Encabezados de las tablas
+            dgvRooms.DataBindingComplete += (_, _) =>
+                ImproveGridHeaders();
+
+            dgvMyBookings.DataBindingComplete += (_, _) =>
+                ImproveGridHeaders();
+
+            dgvNotifications.DataBindingComplete += (_, _) =>
+                ImproveGridHeaders();
+
+            // Distribución por áreas
+            ImproveGuestLayout();
+            ImproveManagerLayout();
+            ImproveAdminLayout();
+        }
+
+        private void ImproveGuestLayout()
+        {
+            // Buscar habitaciones
+            ConfigureUserPage(
+                tabGuest,
+                dgvRooms,
+                150,
+                btnViewRoomDetails,
+                btnBookRoom);
+
+            StyleSecondaryAction(btnViewRoomDetails);
+            StylePrimaryAction(btnBookRoom);
+
+            // Reservas
+            ConfigureUserPage(
+                tabMyBookings,
+                dgvMyBookings,
+                116,
+                btnRefreshBookings,
+                btnCancelBooking,
+                btnModifyBooking);
+
+            StyleSecondaryAction(btnRefreshBookings);
+            StyleDangerAction(btnCancelBooking);
+            StylePrimaryAction(btnModifyBooking);
+
+            // Notificaciones
+            ConfigureUserPage(
+                tabNotifications,
+                dgvNotifications,
+                116,
+                btnRefreshNotifications,
+                btnMarkNotificationRead);
+
+            StyleSecondaryAction(btnRefreshNotifications);
+            StylePrimaryAction(btnMarkNotificationRead);
+        }
+
+        private static void ConfigureUserPage(
+            TabPage page,
+            DataGridView grid,
+            int gridTop,
+            params Button[] buttons)
+        {
+            void ArrangePage()
+            {
+                const int horizontalMargin = 45;
+                const int buttonWidth = 165;
+                const int buttonHeight = 38;
+                const int buttonGap = 14;
+                const int bottomMargin = 30;
+                const int gapBelowGrid = 24;
+
+                int pageWidth = page.ClientSize.Width;
+                int pageHeight = page.ClientSize.Height;
+
+                int buttonTop =
+                    pageHeight -
+                    bottomMargin -
+                    buttonHeight;
+
+                // Tabla
+                grid.Left = horizontalMargin;
+                grid.Top = gridTop;
+
+                grid.Width = Math.Max(
+                    300,
+                    pageWidth - horizontalMargin * 2);
+
+                grid.Height = Math.Max(
+                    150,
+                    buttonTop - gridTop - gapBelowGrid);
+
+                grid.Anchor =
+                    AnchorStyles.Top |
+                    AnchorStyles.Bottom |
+                    AnchorStyles.Left |
+                    AnchorStyles.Right;
+
+                // Grupo de botones centrado
+                int groupWidth =
+                    buttons.Length * buttonWidth +
+                    (buttons.Length - 1) * buttonGap;
+
+                int startLeft =
+                    Math.Max(
+                        horizontalMargin,
+                        (pageWidth - groupWidth) / 2);
+
+                for (int index = 0;
+                     index < buttons.Length;
+                     index++)
+                {
+                    Button button = buttons[index];
+
+                    button.Left =
+                        startLeft +
+                        index * (buttonWidth + buttonGap);
+
+                    button.Top = buttonTop;
+                    button.Width = buttonWidth;
+                    button.Height = buttonHeight;
+                    button.Anchor = AnchorStyles.Bottom;
+                }
+            }
+
+            ArrangePage();
+
+            page.Resize += (_, _) =>
+            {
+                ArrangePage();
+            };
+        }
+
+        private static void StylePrimaryAction(
+            Button button)
+        {
+            button.BackColor = AppTheme.Primary;
+            button.ForeColor = Color.White;
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderSize = 0;
+            button.Cursor = Cursors.Hand;
+
+            button.FlatAppearance.MouseOverBackColor =
+                Color.FromArgb(37, 94, 140);
+        }
+
+        private static void StyleSecondaryAction(
+            Button button)
+        {
+            button.BackColor = Color.White;
+            button.ForeColor = AppTheme.Primary;
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderColor =
+                AppTheme.Primary;
+
+            button.FlatAppearance.BorderSize = 1;
+            button.Cursor = Cursors.Hand;
+
+            button.FlatAppearance.MouseOverBackColor =
+                Color.FromArgb(238, 245, 250);
+        }
+
+        private static void StyleDangerAction(
+            Button button)
+        {
+            Color danger = Color.FromArgb(185, 55, 55);
+
+            button.BackColor = Color.White;
+            button.ForeColor = danger;
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderColor = danger;
+            button.FlatAppearance.BorderSize = 1;
+            button.Cursor = Cursors.Hand;
+
+            button.FlatAppearance.MouseOverBackColor =
+                Color.FromArgb(253, 240, 240);
+        }
+
+        private void ImproveManagerLayout()
+        {
+            // Hoteles
+            ConfigureManagerPage(
+                tabManageHotels,
+                dgvManagerHotels,
+                btnAddHotel,
+                btnEditHotel,
+                btnRefreshHotels);
+
+            // Habitaciones
+            ConfigureManagerPage(
+                tabManageRooms,
+                dgvManagerRooms,
+                btnAddRoom,
+                btnEditRoom,
+                btnRemoveRoom,
+                btnRefreshRooms);
+
+            // Aprobaciones
+            ConfigureManagerPage(
+                tabBookingApprovals,
+                dgvPendingBookings,
+                btnApproveBooking,
+                btnRejectBooking,
+                btnRefreshPendingBookings);
+
+            // Botones principales
+            StylePrimaryManagerButton(btnAddHotel);
+            StylePrimaryManagerButton(btnAddRoom);
+            StylePrimaryManagerButton(btnApproveBooking);
+
+            // Botones peligrosos
+            StyleDangerManagerButton(btnRemoveRoom);
+            StyleDangerManagerButton(btnRejectBooking);
+
+            // Encabezados más legibles
+            dgvManagerRooms.DataBindingComplete += (_, _) =>
+            {
+                SetHeader(
+                    dgvManagerRooms,
+                    "PricePerNight",
+                    "Price per night");
+
+                SetHeader(
+                    dgvManagerRooms,
+                    "RoomNumber",
+                    "Room number");
+            };
+
+            dgvPendingBookings.DataBindingComplete += (_, _) =>
+            {
+                SetHeader(
+                    dgvPendingBookings,
+                    "CheckIn",
+                    "Check-in");
+
+                SetHeader(
+                    dgvPendingBookings,
+                    "CheckOut",
+                    "Check-out");
+
+                SetHeader(
+                    dgvPendingBookings,
+                    "Requested",
+                    "Requested on");
+            };
+        }
+
+        private static void ConfigureManagerPage(
+            TabPage page,
+            DataGridView grid,
+            params Button[] buttons)
+        {
+            void ArrangePage()
+            {
+                const int horizontalMargin = 45;
+                const int gridTop = 70;
+                const int buttonWidth = 165;
+                const int buttonHeight = 38;
+                const int buttonGap = 14;
+                const int bottomMargin = 35;
+                const int gapBelowGrid = 24;
+
+                int buttonTop =
+                    page.ClientSize.Height -
+                    bottomMargin -
+                    buttonHeight;
+
+                // Grid
+                grid.Left = horizontalMargin;
+                grid.Top = gridTop;
+
+                grid.Width = Math.Max(
+                    300,
+                    page.ClientSize.Width -
+                    horizontalMargin * 2);
+
+                grid.Height = Math.Max(
+                    180,
+                    buttonTop -
+                    gridTop -
+                    gapBelowGrid);
+
+                // Anchoring manual para evitar movimientos desiguales.
+                grid.Anchor = AnchorStyles.Top |
+                              AnchorStyles.Bottom |
+                              AnchorStyles.Left |
+                              AnchorStyles.Right;
+
+                // Anchura total del grupo de botones.
+                int groupWidth =
+                    buttons.Length * buttonWidth +
+                    (buttons.Length - 1) * buttonGap;
+
+                int startLeft =
+                    Math.Max(
+                        horizontalMargin,
+                        (page.ClientSize.Width - groupWidth) / 2);
+
+                for (int index = 0;
+                     index < buttons.Length;
+                     index++)
+                {
+                    Button button = buttons[index];
+
+                    button.Width = buttonWidth;
+                    button.Height = buttonHeight;
+                    button.Left =
+                        startLeft +
+                        index * (buttonWidth + buttonGap);
+
+                    button.Top = buttonTop;
+                    button.Anchor =
+                        AnchorStyles.Bottom;
+                }
+            }
+
+            ArrangePage();
+
+            page.Resize += (_, _) =>
+            {
+                ArrangePage();
+            };
+        }
+
+        private static void StylePrimaryManagerButton(
+            Button button)
+        {
+            button.BackColor = AppTheme.Primary;
+            button.ForeColor = Color.White;
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderSize = 0;
+            button.Cursor = Cursors.Hand;
+        }
+
+        private static void StyleDangerManagerButton(
+            Button button)
+        {
+            Color danger = Color.FromArgb(185, 55, 55);
+
+            button.BackColor = Color.White;
+            button.ForeColor = danger;
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderColor = danger;
+            button.FlatAppearance.BorderSize = 1;
+            button.Cursor = Cursors.Hand;
+
+            button.FlatAppearance.MouseOverBackColor =
+                Color.FromArgb(253, 240, 240);
+        }
+
+        private void ImproveAdminLayout()
+        {
+            // Controles antiguos que están fuera del área visible.
+            button1.Visible = false;
+            button2.Visible = false;
+            button3.Visible = false;
+            button4.Visible = false;
+            button5.Visible = false;
+            button6.Visible = false;
+            button7.Visible = false;
+            button8.Visible = false;
+            button9.Visible = false;
+            button10.Visible = false;
+
+            ConfigureAccountsPage();
+            ConfigureRefundsPage();
+            ConfigureReportsPage();
+
+            tabManageAccounts.Resize += (_, _) =>
+                ConfigureAccountsPage();
+
+            tabManageRefunds.Resize += (_, _) =>
+                ConfigureRefundsPage();
+
+            tabReports.Resize += (_, _) =>
+                ConfigureReportsPage();
+
+            dgvBookingStatusReport.DataBindingComplete += (_, _) =>
+            {
+                SetHeader(
+                    dgvBookingStatusReport,
+                    "TotalValue",
+                    "Total value");
+            };
+
+            dgvHotelReport.DataBindingComplete += (_, _) =>
+            {
+                SetHeader(
+                    dgvHotelReport,
+                    "NetRevenue",
+                    "Net revenue");
+            };
+        }
+
+        private void ConfigureAccountsPage()
+        {
+            const int margin = 45;
+
+            int pageWidth = tabManageAccounts.ClientSize.Width;
+            int pageHeight = tabManageAccounts.ClientSize.Height;
+
+            // Buscador en la parte superior
+            lblUserSearch.Text = "Name or email";
+            lblUserSearch.Left = margin;
+            lblUserSearch.Top = 35;
+            lblUserSearch.ForeColor = AppTheme.MutedText;
+            lblUserSearch.Anchor =
+                AnchorStyles.Top | AnchorStyles.Left;
+
+            txtUserSearch.Left = 165;
+            txtUserSearch.Top = 30;
+            txtUserSearch.Width = 300;
+            txtUserSearch.AutoSize = true;
+            txtUserSearch.Anchor =
+                AnchorStyles.Top | AnchorStyles.Left;
+
+            btnSearchUsers.Text = "Search";
+            btnSearchUsers.Left = 485;
+            btnSearchUsers.Top = 27;
+            btnSearchUsers.Width = 140;
+            btnSearchUsers.Height = 34;
+            btnSearchUsers.Anchor =
+                AnchorStyles.Top | AnchorStyles.Left;
+
+            StylePrimaryAdminButton(btnSearchUsers);
+
+            // Botones inferiores
+            const int buttonWidth = 180;
+            const int buttonHeight = 38;
+            const int buttonGap = 16;
+
+            int buttonsWidth =
+                buttonWidth * 2 + buttonGap;
+
+            int buttonsLeft =
+                (pageWidth - buttonsWidth) / 2;
+
+            int buttonsTop =
+                pageHeight - buttonHeight - 30;
+
+            btnToggleAccountStatus.Text =
+                "Enable / Disable";
+
+            btnToggleAccountStatus.Left =
+                buttonsLeft;
+
+            btnToggleAccountStatus.Top =
+                buttonsTop;
+
+            btnToggleAccountStatus.Width =
+                buttonWidth;
+
+            btnToggleAccountStatus.Height =
+                buttonHeight;
+
+            btnToggleAccountStatus.Anchor =
+                AnchorStyles.Bottom;
+
+            StyleSecondaryAdminButton(
+                btnToggleAccountStatus);
+
+            btnRefreshUsers.Text = "Refresh";
+            btnRefreshUsers.Left =
+                buttonsLeft + buttonWidth + buttonGap;
+
+            btnRefreshUsers.Top = buttonsTop;
+            btnRefreshUsers.Width = buttonWidth;
+            btnRefreshUsers.Height = buttonHeight;
+            btnRefreshUsers.Anchor =
+                AnchorStyles.Bottom;
+
+            StyleSecondaryAdminButton(
+                btnRefreshUsers);
+
+            // Tabla
+            dgvUsers.Left = margin;
+            dgvUsers.Top = 85;
+            dgvUsers.Width =
+                Math.Max(300, pageWidth - margin * 2);
+
+            dgvUsers.Height =
+                Math.Max(
+                    180,
+                    buttonsTop - dgvUsers.Top - 24);
+
+            dgvUsers.Anchor =
+                AnchorStyles.Top |
+                AnchorStyles.Bottom |
+                AnchorStyles.Left |
+                AnchorStyles.Right;
+        }
+
+        private void ConfigureRefundsPage()
+        {
+            const int margin = 45;
+            const int buttonWidth = 180;
+            const int buttonHeight = 38;
+            const int buttonGap = 16;
+
+            int pageWidth = tabManageRefunds.ClientSize.Width;
+            int pageHeight = tabManageRefunds.ClientSize.Height;
+
+            int buttonsWidth =
+                buttonWidth * 2 + buttonGap;
+
+            int buttonsLeft =
+                (pageWidth - buttonsWidth) / 2;
+
+            int buttonsTop =
+                pageHeight - buttonHeight - 30;
+
+            dgvRefunds.Left = margin;
+            dgvRefunds.Top = 70;
+            dgvRefunds.Width =
+                Math.Max(300, pageWidth - margin * 2);
+
+            dgvRefunds.Height =
+                Math.Max(
+                    180,
+                    buttonsTop - dgvRefunds.Top - 24);
+
+            dgvRefunds.Anchor =
+                AnchorStyles.Top |
+                AnchorStyles.Bottom |
+                AnchorStyles.Left |
+                AnchorStyles.Right;
+
+            btnProcessRefund.Text = "Process refund";
+            btnProcessRefund.Left = buttonsLeft;
+            btnProcessRefund.Top = buttonsTop;
+            btnProcessRefund.Width = buttonWidth;
+            btnProcessRefund.Height = buttonHeight;
+            btnProcessRefund.Anchor =
+                AnchorStyles.Bottom;
+
+            StylePrimaryAdminButton(btnProcessRefund);
+
+            btnRefreshRefunds.Text = "Refresh";
+            btnRefreshRefunds.Left =
+                buttonsLeft + buttonWidth + buttonGap;
+
+            btnRefreshRefunds.Top = buttonsTop;
+            btnRefreshRefunds.Width = buttonWidth;
+            btnRefreshRefunds.Height = buttonHeight;
+            btnRefreshRefunds.Anchor =
+                AnchorStyles.Bottom;
+
+            StyleSecondaryAdminButton(
+                btnRefreshRefunds);
+        }
+
+        private void ConfigureReportsPage()
+        {
+            const int margin = 45;
+            const int filterTop = 28;
+            const int metricsTop = 90;
+            const int gridsTop = 255;
+            const int gridGap = 24;
+
+            int pageWidth = tabReports.ClientSize.Width;
+            int pageHeight = tabReports.ClientSize.Height;
+            int availableWidth = pageWidth - margin * 2;
+
+            // Filtros de fecha
+            lblReportFrom.Text = "From";
+            lblReportFrom.Left = margin;
+            lblReportFrom.Top = filterTop + 6;
+            lblReportFrom.ForeColor = AppTheme.MutedText;
+
+            dtpReportFrom.Left = margin + 55;
+            dtpReportFrom.Top = filterTop;
+            dtpReportFrom.Width = 190;
+
+            lblReportTo.Text = "To";
+            lblReportTo.Left = margin + 275;
+            lblReportTo.Top = filterTop + 6;
+            lblReportTo.ForeColor = AppTheme.MutedText;
+
+            dtpReportTo.Left = margin + 310;
+            dtpReportTo.Top = filterTop;
+            dtpReportTo.Width = 190;
+
+            btnGenerateReport.Text = "Generate report";
+            btnGenerateReport.Left = margin + 530;
+            btnGenerateReport.Top = filterTop - 3;
+            btnGenerateReport.Width = 180;
+            btnGenerateReport.Height = 34;
+
+            StylePrimaryAdminButton(
+                btnGenerateReport);
+
+            // Métricas: tres columnas alineadas
+            int firstColumn = margin;
+            int secondColumn =
+                margin + availableWidth / 3;
+
+            int thirdColumn =
+                margin + availableWidth * 2 / 3;
+
+            PositionReportMetric(
+                lblTotalUsersReport,
+                firstColumn,
+                metricsTop);
+
+            PositionReportMetric(
+                lblTotalBookingsReport,
+                firstColumn,
+                metricsTop + 38);
+
+            PositionReportMetric(
+                lblReportGeneratedAt,
+                firstColumn,
+                metricsTop + 76);
+
+            PositionReportMetric(
+                lblTotalHotelsReport,
+                secondColumn,
+                metricsTop);
+
+            PositionReportMetric(
+                lblTotalRoomsReport,
+                secondColumn,
+                metricsTop + 38);
+
+            PositionReportMetric(
+                lblGrossRevenueReport,
+                thirdColumn,
+                metricsTop);
+
+            PositionReportMetric(
+                lblRefundedReport,
+                thirdColumn,
+                metricsTop + 38);
+
+            PositionReportMetric(
+                lblNetRevenueReport,
+                thirdColumn,
+                metricsTop + 76);
+
+            lblNetRevenueReport.Font = new Font(
+                "Segoe UI Semibold",
+                10F,
+                FontStyle.Regular);
+
+            lblNetRevenueReport.ForeColor =
+                AppTheme.PrimaryDark;
+
+            // Las tablas usan 36% y 64% del espacio.
+            int leftGridWidth =
+                (int)((availableWidth - gridGap) * 0.36);
+
+            int rightGridWidth =
+                availableWidth - gridGap - leftGridWidth;
+
+            int gridHeight =
+                Math.Max(150, pageHeight - gridsTop - 35);
+
+            // Títulos de las tablas
+            label7.Text = "Bookings by status";
+            label7.Font = new Font(
+                "Segoe UI Semibold",
+                11F,
+                FontStyle.Regular);
+
+            label7.Left = margin;
+            label7.Top = gridsTop - 30;
+            label7.ForeColor = AppTheme.Text;
+
+            label6.Text = "Hotel performance";
+            label6.Font = new Font(
+                "Segoe UI Semibold",
+                11F,
+                FontStyle.Regular);
+
+            label6.Left =
+                margin + leftGridWidth + gridGap;
+
+            label6.Top = gridsTop - 30;
+            label6.ForeColor = AppTheme.Text;
+
+            // Reservas por estado
+            dgvBookingStatusReport.Left = margin;
+            dgvBookingStatusReport.Top = gridsTop;
+            dgvBookingStatusReport.Width = leftGridWidth;
+            dgvBookingStatusReport.Height = gridHeight;
+            dgvBookingStatusReport.Anchor =
+                AnchorStyles.Top |
+                AnchorStyles.Bottom |
+                AnchorStyles.Left;
+
+            // Rendimiento de hoteles
+            dgvHotelReport.Left =
+                margin + leftGridWidth + gridGap;
+
+            dgvHotelReport.Top = gridsTop;
+            dgvHotelReport.Width = rightGridWidth;
+            dgvHotelReport.Height = gridHeight;
+            dgvHotelReport.Anchor =
+                AnchorStyles.Top |
+                AnchorStyles.Bottom |
+                AnchorStyles.Left |
+                AnchorStyles.Right;
+
+            // La tabla derecha tiene muchas columnas.
+            dgvHotelReport.AutoSizeColumnsMode =
+                DataGridViewAutoSizeColumnsMode.Fill;
+
+            if (dgvHotelReport.Columns.Count > 0)
+            {
+                dgvHotelReport.Columns["Hotel"].FillWeight = 180;
+            }
+        }
+
+        private static void PositionReportMetric(
+            Label label,
+            int left,
+            int top)
+        {
+            label.Left = left;
+            label.Top = top;
+            label.AutoSize = true;
+            label.Font = new Font(
+                "Segoe UI",
+                10F,
+                FontStyle.Regular);
+
+            label.ForeColor = AppTheme.Text;
+        }
+
+        private static void StylePrimaryAdminButton(
+            Button button)
+        {
+            button.BackColor = AppTheme.Primary;
+            button.ForeColor = Color.White;
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderSize = 0;
+            button.Cursor = Cursors.Hand;
+        }
+
+        private static void StyleSecondaryAdminButton(
+            Button button)
+        {
+            button.BackColor = Color.White;
+            button.ForeColor = AppTheme.Primary;
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderColor =
+                AppTheme.Primary;
+
+            button.FlatAppearance.BorderSize = 1;
+            button.Cursor = Cursors.Hand;
+        }
+
+        private static void AlignGrid(
+            DataGridView grid,
+            TabPage page,
+            int top,
+            int bottom)
+        {
+            const int horizontalMargin = 50;
+
+            grid.Left = horizontalMargin;
+            grid.Top = top;
+            grid.Width = Math.Max(
+                200,
+                page.ClientSize.Width - horizontalMargin * 2);
+
+            grid.Height = Math.Max(
+                150,
+                page.ClientSize.Height - top - bottom);
+        }
+
+        private static void StylePageTitle(
+            Label title,
+            TabPage page)
+        {
+            title.Font = new Font(
+                "Segoe UI Semibold",
+                24F,
+                FontStyle.Regular);
+
+            title.AutoSize = true;
+            title.Top = 20;
+            title.Left = Math.Max(
+                20,
+                (page.ClientSize.Width - title.Width) / 2);
+
+            page.Resize += (_, _) =>
+            {
+                title.Left = Math.Max(
+                    20,
+                    (page.ClientSize.Width - title.Width) / 2);
+            };
+        }
+
+        private void ImproveGridHeaders()
+        {
+            SetHeader(dgvRooms, "RoomNumber", "Room");
+            SetHeader(dgvRooms, "PricePerNight", "Price per night");
+            SetHeader(dgvRooms, "StarRating", "Stars");
+
+            SetHeader(dgvMyBookings, "CheckIn", "Check-in");
+            SetHeader(dgvMyBookings, "CheckOut", "Check-out");
+            SetHeader(dgvMyBookings, "BookingStatus", "Booking status");
+            SetHeader(dgvMyBookings, "PaymentStatus", "Payment status");
+
+            SetHeader(dgvNotifications, "CreatedAt", "Received");
+        }
+
+        private static void SetHeader( DataGridView grid,
+             string columnName,
+             string visibleText)
+        {
+            if (grid.Columns.Contains(columnName))
+                grid.Columns[columnName].HeaderText = visibleText;
         }
 
         //Login form constructor

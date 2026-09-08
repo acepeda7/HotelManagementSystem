@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using HotelManagementSystem.Data;
 using HotelManagementSystem.Models;
+using HotelManagementSystem.UI;
 
 namespace HotelManagementSystem
 {
@@ -19,6 +20,183 @@ namespace HotelManagementSystem
         public RoomForm()
         {
             InitializeComponent();
+
+            AppTheme.Apply(this);
+            ImproveRoomLayout();
+        }
+
+        private void ImproveRoomLayout()
+        {
+            SuspendLayout();
+
+            Text = "Room Details";
+            ClientSize = new Size(580, 680);
+            BackColor = AppTheme.Background;
+
+            const int labelLeft = 65;
+            const int fieldLeft = 220;
+            const int fieldWidth = 295;
+
+            // Título
+            Label lblPageTitle = new()
+            {
+                Name = "lblPageTitle",
+                Text = "Room details",
+                AutoSize = true,
+                Font = new Font(
+                    "Segoe UI Semibold",
+                    20F,
+                    FontStyle.Regular),
+                ForeColor = AppTheme.Text,
+                BackColor = AppTheme.Background,
+                Top = 32
+            };
+
+            lblPageTitle.Left =
+                (ClientSize.Width - lblPageTitle.Width) / 2;
+
+            Controls.Add(lblPageTitle);
+
+            // Hotel
+            PositionRoomLabel(
+                label1,
+                "Hotel",
+                labelLeft,
+                100);
+
+            cmbHotel.Left = fieldLeft;
+            cmbHotel.Top = 95;
+            cmbHotel.Width = fieldWidth;
+            cmbHotel.DropDownStyle =
+                ComboBoxStyle.DropDownList;
+
+            // Número de habitación
+            PositionRoomLabel(
+                label2,
+                "Room number",
+                labelLeft,
+                155);
+
+            txtRoomNumber.Left = fieldLeft;
+            txtRoomNumber.Top = 150;
+            txtRoomNumber.Width = fieldWidth;
+            txtRoomNumber.AutoSize = true;
+
+            // Tipo
+            PositionRoomLabel(
+                label3,
+                "Room type",
+                labelLeft,
+                210);
+
+            txtRoomType.Left = fieldLeft;
+            txtRoomType.Top = 205;
+            txtRoomType.Width = fieldWidth;
+            txtRoomType.AutoSize = true;
+
+            // Capacidad
+            PositionRoomLabel(
+                label4,
+                "Capacity",
+                labelLeft,
+                265);
+
+            nudCapacity.Left = fieldLeft;
+            nudCapacity.Top = 260;
+            nudCapacity.Width = fieldWidth;
+
+            // Precio
+            PositionRoomLabel(
+                label5,
+                "Price per night",
+                labelLeft,
+                320);
+
+            nudPricePerNight.Left = fieldLeft;
+            nudPricePerNight.Top = 315;
+            nudPricePerNight.Width = fieldWidth;
+            nudPricePerNight.DecimalPlaces = 2;
+            nudPricePerNight.ThousandsSeparator = true;
+
+            // Estado
+            PositionRoomLabel(
+                label6,
+                "Status",
+                labelLeft,
+                375);
+
+            cmbRoomStatus.Left = fieldLeft;
+            cmbRoomStatus.Top = 370;
+            cmbRoomStatus.Width = fieldWidth;
+            cmbRoomStatus.DropDownStyle =
+                ComboBoxStyle.DropDownList;
+
+            // Descripción
+            PositionRoomLabel(
+                label7,
+                "Description",
+                labelLeft,
+                430);
+
+            txtRoomDescription.Left = fieldLeft;
+            txtRoomDescription.Top = 425;
+            txtRoomDescription.Width = fieldWidth;
+            txtRoomDescription.Height = 90;
+            txtRoomDescription.Multiline = true;
+            txtRoomDescription.ScrollBars =
+                ScrollBars.Vertical;
+
+            // Mensaje
+            lblMessage.AutoSize = false;
+            lblMessage.Left = labelLeft;
+            lblMessage.Top = 530;
+            lblMessage.Width = 450;
+            lblMessage.Height = 28;
+            lblMessage.ForeColor = Color.IndianRed;
+            lblMessage.TextAlign =
+                ContentAlignment.MiddleLeft;
+
+            // Guardar
+            btnSaveRoom.Text = "Save room";
+            btnSaveRoom.Left = 90;
+            btnSaveRoom.Top = 585;
+            btnSaveRoom.Width = 190;
+            btnSaveRoom.Height = 40;
+            btnSaveRoom.BackColor = AppTheme.Primary;
+            btnSaveRoom.ForeColor = Color.White;
+            btnSaveRoom.FlatStyle = FlatStyle.Flat;
+            btnSaveRoom.FlatAppearance.BorderSize = 0;
+
+            // Cancelar
+            btnCancel.Text = "Cancel";
+            btnCancel.Left = 300;
+            btnCancel.Top = 585;
+            btnCancel.Width = 190;
+            btnCancel.Height = 40;
+            btnCancel.BackColor = Color.White;
+            btnCancel.ForeColor = AppTheme.Primary;
+            btnCancel.FlatStyle = FlatStyle.Flat;
+            btnCancel.FlatAppearance.BorderColor =
+                AppTheme.Primary;
+            btnCancel.FlatAppearance.BorderSize = 1;
+
+            AcceptButton = btnSaveRoom;
+            CancelButton = btnCancel;
+
+            ResumeLayout(false);
+            PerformLayout();
+        }
+
+        private static void PositionRoomLabel(
+            Label label,
+            string text,
+            int left,
+            int top)
+        {
+            label.Text = text;
+            label.Left = left;
+            label.Top = top;
+            label.ForeColor = AppTheme.MutedText;
         }
         public RoomForm(
         int managerId,

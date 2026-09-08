@@ -85,6 +85,22 @@
             button7 = new Button();
             dgvRefunds = new DataGridView();
             tabReports = new TabPage();
+            label7 = new Label();
+            label6 = new Label();
+            dgvHotelReport = new DataGridView();
+            lblReportGeneratedAt = new Label();
+            lblNetRevenueReport = new Label();
+            lblRefundedReport = new Label();
+            lblGrossRevenueReport = new Label();
+            lblTotalBookingsReport = new Label();
+            lblTotalRoomsReport = new Label();
+            lblTotalHotelsReport = new Label();
+            lblTotalUsersReport = new Label();
+            btnGenerateReport = new Button();
+            dtpReportTo = new DateTimePicker();
+            lblReportTo = new Label();
+            dtpReportFrom = new DateTimePicker();
+            lblReportFrom = new Label();
             button8 = new Button();
             button9 = new Button();
             button10 = new Button();
@@ -101,22 +117,6 @@
             btnRefreshNotifications = new Button();
             label5 = new Label();
             dgvNotifications = new DataGridView();
-            lblReportFrom = new Label();
-            dtpReportFrom = new DateTimePicker();
-            lblReportTo = new Label();
-            dtpReportTo = new DateTimePicker();
-            btnGenerateReport = new Button();
-            lblTotalUsersReport = new Label();
-            lblTotalHotelsReport = new Label();
-            lblTotalBookingsReport = new Label();
-            lblTotalRoomsReport = new Label();
-            lblGrossRevenueReport = new Label();
-            lblRefundedReport = new Label();
-            lblNetRevenueReport = new Label();
-            lblReportGeneratedAt = new Label();
-            dgvHotelReport = new DataGridView();
-            label6 = new Label();
-            label7 = new Label();
             pnlHeader.SuspendLayout();
             tabDashboard.SuspendLayout();
             tabGuest.SuspendLayout();
@@ -136,12 +136,12 @@
             tabManageRefunds.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvRefunds).BeginInit();
             tabReports.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvHotelReport).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dgvBookingStatusReport).BeginInit();
             tabMyBookings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvMyBookings).BeginInit();
             tabNotifications.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvNotifications).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)dgvHotelReport).BeginInit();
             SuspendLayout();
             // 
             // pnlHeader
@@ -217,7 +217,7 @@
             tabGuest.Padding = new Padding(3);
             tabGuest.Size = new Size(1076, 573);
             tabGuest.TabIndex = 0;
-            tabGuest.Text = "Guest Dashboard";
+            tabGuest.Text = "Find a Room";
             tabGuest.UseVisualStyleBackColor = true;
             // 
             // btnBookRoom
@@ -324,9 +324,9 @@
             label1.Font = new Font("Segoe UI", 30F);
             label1.Location = new Point(386, 3);
             label1.Name = "label1";
-            label1.Size = new Size(329, 54);
+            label1.Size = new Size(407, 54);
             label1.TabIndex = 0;
-            label1.Text = "Guest Dashboard";
+            label1.Text = "Find your perfect stay";
             // 
             // tabManager
             // 
@@ -337,7 +337,7 @@
             tabManager.Padding = new Padding(3);
             tabManager.Size = new Size(1076, 573);
             tabManager.TabIndex = 1;
-            tabManager.Text = "Manager Dashboard";
+            tabManager.Text = "Management";
             tabManager.UseVisualStyleBackColor = true;
             // 
             // tabManagerTools
@@ -571,7 +571,7 @@
             tabAdmin.Padding = new Padding(3);
             tabAdmin.Size = new Size(1076, 573);
             tabAdmin.TabIndex = 2;
-            tabAdmin.Text = "tabAdmin";
+            tabAdmin.Text = "Administration";
             tabAdmin.UseVisualStyleBackColor = true;
             // 
             // tabAdminTools
@@ -825,6 +825,155 @@
             tabReports.Text = "Reports";
             tabReports.UseVisualStyleBackColor = true;
             // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(252, 259);
+            label7.Name = "label7";
+            label7.Size = new Size(107, 15);
+            label7.TabIndex = 41;
+            label7.Text = "Bookings by Status";
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(695, 259);
+            label6.Name = "label6";
+            label6.Size = new Size(107, 15);
+            label6.TabIndex = 40;
+            label6.Text = "Hotel Performance";
+            // 
+            // dgvHotelReport
+            // 
+            dgvHotelReport.AllowUserToAddRows = false;
+            dgvHotelReport.AllowUserToDeleteRows = false;
+            dgvHotelReport.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dgvHotelReport.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvHotelReport.BackgroundColor = SystemColors.ControlLight;
+            dgvHotelReport.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvHotelReport.Location = new Point(548, 292);
+            dgvHotelReport.MultiSelect = false;
+            dgvHotelReport.Name = "dgvHotelReport";
+            dgvHotelReport.ReadOnly = true;
+            dgvHotelReport.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvHotelReport.Size = new Size(390, 196);
+            dgvHotelReport.TabIndex = 39;
+            // 
+            // lblReportGeneratedAt
+            // 
+            lblReportGeneratedAt.AutoSize = true;
+            lblReportGeneratedAt.Location = new Point(100, 193);
+            lblReportGeneratedAt.Name = "lblReportGeneratedAt";
+            lblReportGeneratedAt.Size = new Size(0, 15);
+            lblReportGeneratedAt.TabIndex = 38;
+            // 
+            // lblNetRevenueReport
+            // 
+            lblNetRevenueReport.AutoSize = true;
+            lblNetRevenueReport.Location = new Point(738, 193);
+            lblNetRevenueReport.Name = "lblNetRevenueReport";
+            lblNetRevenueReport.Size = new Size(104, 15);
+            lblNetRevenueReport.TabIndex = 37;
+            lblNetRevenueReport.Text = "Net revenue: £0.00";
+            // 
+            // lblRefundedReport
+            // 
+            lblRefundedReport.AutoSize = true;
+            lblRefundedReport.Location = new Point(738, 142);
+            lblRefundedReport.Name = "lblRefundedReport";
+            lblRefundedReport.Size = new Size(91, 15);
+            lblRefundedReport.TabIndex = 36;
+            lblRefundedReport.Text = "Refunded: £0.00";
+            // 
+            // lblGrossRevenueReport
+            // 
+            lblGrossRevenueReport.AutoSize = true;
+            lblGrossRevenueReport.Location = new Point(738, 92);
+            lblGrossRevenueReport.Name = "lblGrossRevenueReport";
+            lblGrossRevenueReport.Size = new Size(124, 15);
+            lblGrossRevenueReport.TabIndex = 35;
+            lblGrossRevenueReport.Text = "Gross payments: £0.00";
+            // 
+            // lblTotalBookingsReport
+            // 
+            lblTotalBookingsReport.AutoSize = true;
+            lblTotalBookingsReport.Location = new Point(99, 142);
+            lblTotalBookingsReport.Name = "lblTotalBookingsReport";
+            lblTotalBookingsReport.Size = new Size(68, 15);
+            lblTotalBookingsReport.TabIndex = 34;
+            lblTotalBookingsReport.Text = "Bookings: 0";
+            // 
+            // lblTotalRoomsReport
+            // 
+            lblTotalRoomsReport.AutoSize = true;
+            lblTotalRoomsReport.Location = new Point(409, 142);
+            lblTotalRoomsReport.Name = "lblTotalRoomsReport";
+            lblTotalRoomsReport.Size = new Size(56, 15);
+            lblTotalRoomsReport.TabIndex = 33;
+            lblTotalRoomsReport.Text = "Rooms: 0";
+            // 
+            // lblTotalHotelsReport
+            // 
+            lblTotalHotelsReport.AutoSize = true;
+            lblTotalHotelsReport.Location = new Point(409, 92);
+            lblTotalHotelsReport.Name = "lblTotalHotelsReport";
+            lblTotalHotelsReport.Size = new Size(53, 15);
+            lblTotalHotelsReport.TabIndex = 32;
+            lblTotalHotelsReport.Text = "Hotels: 0";
+            // 
+            // lblTotalUsersReport
+            // 
+            lblTotalUsersReport.AutoSize = true;
+            lblTotalUsersReport.Location = new Point(99, 92);
+            lblTotalUsersReport.Name = "lblTotalUsersReport";
+            lblTotalUsersReport.Size = new Size(47, 15);
+            lblTotalUsersReport.TabIndex = 31;
+            lblTotalUsersReport.Text = "Users: 0";
+            // 
+            // btnGenerateReport
+            // 
+            btnGenerateReport.Location = new Point(738, 33);
+            btnGenerateReport.Name = "btnGenerateReport";
+            btnGenerateReport.Size = new Size(200, 23);
+            btnGenerateReport.TabIndex = 30;
+            btnGenerateReport.Text = "Generate Report";
+            btnGenerateReport.UseVisualStyleBackColor = true;
+            btnGenerateReport.Click += btnGenerateReport_Click;
+            // 
+            // dtpReportTo
+            // 
+            dtpReportTo.Format = DateTimePickerFormat.Short;
+            dtpReportTo.Location = new Point(462, 33);
+            dtpReportTo.Name = "dtpReportTo";
+            dtpReportTo.Size = new Size(200, 23);
+            dtpReportTo.TabIndex = 29;
+            // 
+            // lblReportTo
+            // 
+            lblReportTo.AutoSize = true;
+            lblReportTo.Location = new Point(409, 39);
+            lblReportTo.Name = "lblReportTo";
+            lblReportTo.Size = new Size(20, 15);
+            lblReportTo.TabIndex = 28;
+            lblReportTo.Text = "To";
+            // 
+            // dtpReportFrom
+            // 
+            dtpReportFrom.Format = DateTimePickerFormat.Short;
+            dtpReportFrom.Location = new Point(159, 33);
+            dtpReportFrom.Name = "dtpReportFrom";
+            dtpReportFrom.Size = new Size(200, 23);
+            dtpReportFrom.TabIndex = 27;
+            // 
+            // lblReportFrom
+            // 
+            lblReportFrom.AutoSize = true;
+            lblReportFrom.Location = new Point(100, 39);
+            lblReportFrom.Name = "lblReportFrom";
+            lblReportFrom.Size = new Size(35, 15);
+            lblReportFrom.TabIndex = 26;
+            lblReportFrom.Text = "From";
+            // 
             // button8
             // 
             button8.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
@@ -892,7 +1041,7 @@
             tabMyBookings.Padding = new Padding(3);
             tabMyBookings.Size = new Size(1076, 573);
             tabMyBookings.TabIndex = 3;
-            tabMyBookings.Text = "My Bookings";
+            tabMyBookings.Text = "Bookings";
             tabMyBookings.UseVisualStyleBackColor = true;
             // 
             // btnModifyBooking
@@ -932,11 +1081,11 @@
             // 
             label4.AutoSize = true;
             label4.Font = new Font("Segoe UI", 30F);
-            label4.Location = new Point(361, 31);
+            label4.Location = new Point(421, 33);
             label4.Name = "label4";
-            label4.Size = new Size(390, 54);
+            label4.Size = new Size(276, 54);
             label4.TabIndex = 14;
-            label4.Text = "Bookings Dashboard";
+            label4.Text = "Your bookings";
             // 
             // dgvMyBookings
             // 
@@ -993,11 +1142,11 @@
             // 
             label5.AutoSize = true;
             label5.Font = new Font("Segoe UI", 30F);
-            label5.Location = new Point(341, 35);
+            label5.Location = new Point(403, 37);
             label5.Name = "label5";
-            label5.Size = new Size(452, 54);
+            label5.Size = new Size(337, 54);
             label5.TabIndex = 18;
-            label5.Text = "Notifications Dashboard";
+            label5.Text = "Your Notifications";
             // 
             // dgvNotifications
             // 
@@ -1014,155 +1163,6 @@
             dgvNotifications.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvNotifications.Size = new Size(974, 346);
             dgvNotifications.TabIndex = 17;
-            // 
-            // lblReportFrom
-            // 
-            lblReportFrom.AutoSize = true;
-            lblReportFrom.Location = new Point(100, 39);
-            lblReportFrom.Name = "lblReportFrom";
-            lblReportFrom.Size = new Size(35, 15);
-            lblReportFrom.TabIndex = 26;
-            lblReportFrom.Text = "From";
-            // 
-            // dtpReportFrom
-            // 
-            dtpReportFrom.Format = DateTimePickerFormat.Short;
-            dtpReportFrom.Location = new Point(159, 33);
-            dtpReportFrom.Name = "dtpReportFrom";
-            dtpReportFrom.Size = new Size(200, 23);
-            dtpReportFrom.TabIndex = 27;
-            // 
-            // lblReportTo
-            // 
-            lblReportTo.AutoSize = true;
-            lblReportTo.Location = new Point(409, 39);
-            lblReportTo.Name = "lblReportTo";
-            lblReportTo.Size = new Size(20, 15);
-            lblReportTo.TabIndex = 28;
-            lblReportTo.Text = "To";
-            // 
-            // dtpReportTo
-            // 
-            dtpReportTo.Format = DateTimePickerFormat.Short;
-            dtpReportTo.Location = new Point(462, 33);
-            dtpReportTo.Name = "dtpReportTo";
-            dtpReportTo.Size = new Size(200, 23);
-            dtpReportTo.TabIndex = 29;
-            // 
-            // btnGenerateReport
-            // 
-            btnGenerateReport.Location = new Point(738, 33);
-            btnGenerateReport.Name = "btnGenerateReport";
-            btnGenerateReport.Size = new Size(200, 23);
-            btnGenerateReport.TabIndex = 30;
-            btnGenerateReport.Text = "Generate Report";
-            btnGenerateReport.UseVisualStyleBackColor = true;
-            btnGenerateReport.Click += btnGenerateReport_Click;
-            // 
-            // lblTotalUsersReport
-            // 
-            lblTotalUsersReport.AutoSize = true;
-            lblTotalUsersReport.Location = new Point(99, 92);
-            lblTotalUsersReport.Name = "lblTotalUsersReport";
-            lblTotalUsersReport.Size = new Size(47, 15);
-            lblTotalUsersReport.TabIndex = 31;
-            lblTotalUsersReport.Text = "Users: 0";
-            // 
-            // lblTotalHotelsReport
-            // 
-            lblTotalHotelsReport.AutoSize = true;
-            lblTotalHotelsReport.Location = new Point(409, 92);
-            lblTotalHotelsReport.Name = "lblTotalHotelsReport";
-            lblTotalHotelsReport.Size = new Size(53, 15);
-            lblTotalHotelsReport.TabIndex = 32;
-            lblTotalHotelsReport.Text = "Hotels: 0";
-            // 
-            // lblTotalBookingsReport
-            // 
-            lblTotalBookingsReport.AutoSize = true;
-            lblTotalBookingsReport.Location = new Point(99, 142);
-            lblTotalBookingsReport.Name = "lblTotalBookingsReport";
-            lblTotalBookingsReport.Size = new Size(68, 15);
-            lblTotalBookingsReport.TabIndex = 34;
-            lblTotalBookingsReport.Text = "Bookings: 0";
-            // 
-            // lblTotalRoomsReport
-            // 
-            lblTotalRoomsReport.AutoSize = true;
-            lblTotalRoomsReport.Location = new Point(409, 142);
-            lblTotalRoomsReport.Name = "lblTotalRoomsReport";
-            lblTotalRoomsReport.Size = new Size(56, 15);
-            lblTotalRoomsReport.TabIndex = 33;
-            lblTotalRoomsReport.Text = "Rooms: 0";
-            // 
-            // lblGrossRevenueReport
-            // 
-            lblGrossRevenueReport.AutoSize = true;
-            lblGrossRevenueReport.Location = new Point(738, 92);
-            lblGrossRevenueReport.Name = "lblGrossRevenueReport";
-            lblGrossRevenueReport.Size = new Size(124, 15);
-            lblGrossRevenueReport.TabIndex = 35;
-            lblGrossRevenueReport.Text = "Gross payments: £0.00";
-            // 
-            // lblRefundedReport
-            // 
-            lblRefundedReport.AutoSize = true;
-            lblRefundedReport.Location = new Point(738, 142);
-            lblRefundedReport.Name = "lblRefundedReport";
-            lblRefundedReport.Size = new Size(91, 15);
-            lblRefundedReport.TabIndex = 36;
-            lblRefundedReport.Text = "Refunded: £0.00";
-            // 
-            // lblNetRevenueReport
-            // 
-            lblNetRevenueReport.AutoSize = true;
-            lblNetRevenueReport.Location = new Point(738, 193);
-            lblNetRevenueReport.Name = "lblNetRevenueReport";
-            lblNetRevenueReport.Size = new Size(104, 15);
-            lblNetRevenueReport.TabIndex = 37;
-            lblNetRevenueReport.Text = "Net revenue: £0.00";
-            // 
-            // lblReportGeneratedAt
-            // 
-            lblReportGeneratedAt.AutoSize = true;
-            lblReportGeneratedAt.Location = new Point(100, 193);
-            lblReportGeneratedAt.Name = "lblReportGeneratedAt";
-            lblReportGeneratedAt.Size = new Size(0, 15);
-            lblReportGeneratedAt.TabIndex = 38;
-            // 
-            // dgvHotelReport
-            // 
-            dgvHotelReport.AllowUserToAddRows = false;
-            dgvHotelReport.AllowUserToDeleteRows = false;
-            dgvHotelReport.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            dgvHotelReport.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvHotelReport.BackgroundColor = SystemColors.ControlLight;
-            dgvHotelReport.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvHotelReport.Location = new Point(548, 292);
-            dgvHotelReport.MultiSelect = false;
-            dgvHotelReport.Name = "dgvHotelReport";
-            dgvHotelReport.ReadOnly = true;
-            dgvHotelReport.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvHotelReport.Size = new Size(390, 196);
-            dgvHotelReport.TabIndex = 39;
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Location = new Point(695, 259);
-            label6.Name = "label6";
-            label6.Size = new Size(107, 15);
-            label6.TabIndex = 40;
-            label6.Text = "Hotel Performance";
-            // 
-            // label7
-            // 
-            label7.AutoSize = true;
-            label7.Location = new Point(252, 259);
-            label7.Name = "label7";
-            label7.Size = new Size(107, 15);
-            label7.TabIndex = 41;
-            label7.Text = "Bookings by Status";
             // 
             // DashboardForm
             // 
@@ -1201,6 +1201,7 @@
             ((System.ComponentModel.ISupportInitialize)dgvRefunds).EndInit();
             tabReports.ResumeLayout(false);
             tabReports.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvHotelReport).EndInit();
             ((System.ComponentModel.ISupportInitialize)dgvBookingStatusReport).EndInit();
             tabMyBookings.ResumeLayout(false);
             tabMyBookings.PerformLayout();
@@ -1208,7 +1209,6 @@
             tabNotifications.ResumeLayout(false);
             tabNotifications.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvNotifications).EndInit();
-            ((System.ComponentModel.ISupportInitialize)dgvHotelReport).EndInit();
             ResumeLayout(false);
         }
 

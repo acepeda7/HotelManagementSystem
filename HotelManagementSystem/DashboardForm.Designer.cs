@@ -314,9 +314,9 @@
             lblHotelSearch.AutoSize = true;
             lblHotelSearch.Location = new Point(50, 70);
             lblHotelSearch.Name = "lblHotelSearch";
-            lblHotelSearch.Size = new Size(96, 15);
+            lblHotelSearch.Size = new Size(134, 15);
             lblHotelSearch.TabIndex = 1;
-            lblHotelSearch.Text = "Hotel or location";
+            lblHotelSearch.Text = "Search Hotel or location";
             // 
             // label1
             // 

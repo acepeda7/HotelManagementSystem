@@ -53,6 +53,26 @@ namespace HotelManagementSystem
 
         private void ImproveGuestLayout()
         {
+            //Labels
+            lblHotelSearch.Text = "Search Hotel or location";
+            lblHotelSearch.Visible = true;
+            lblHotelSearch.ForeColor = AppTheme.Text;
+            lblHotelSearch.Location = new Point(50, 70);
+            lblHotelSearch.BringToFront();
+
+            lblCheckIn.Text = "Check-in";
+            lblCheckIn.Visible = true;
+            lblCheckIn.ForeColor = AppTheme.Text;
+            lblCheckIn.Location = new Point(305, 70);
+            lblCheckIn.BringToFront();
+
+            lblCheckOut.Text = "Check-out";
+            lblCheckOut.Visible = true;
+            lblCheckOut.ForeColor = AppTheme.Text;
+            lblCheckOut.Location = new Point(562, 70);
+            lblCheckOut.BringToFront();
+
+
             // Buscar habitaciones
             ConfigureUserPage(
                 tabGuest,
